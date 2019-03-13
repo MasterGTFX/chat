@@ -1,2 +1,2 @@
 # chat
-Chat appliciation, v1.1
+Chat v1.1
