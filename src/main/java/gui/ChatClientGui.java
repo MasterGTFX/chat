@@ -3,11 +3,14 @@ package gui;
 import client.ChatClient;
 import model.Observer;
 
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 import static gui.GuiDocumentWriter.writeMessageClient;
+import static utilities.MessageJSON.serverAddonsJson;
 
 
 public class ChatClientGui implements Observer {
@@ -17,8 +20,10 @@ public class ChatClientGui implements Observer {
     private JTabbedPane tabbedPane1;
     private ChatClient chatClient;
     private JTextPane messageArea;
+    private JTextPane usersOnlineArea;
     private JScrollPane scrollPane;
     private JButton DISCONNECTButton;
+    private JScrollPane usersPane;
     private boolean password = true;
     private boolean isConnected = false;
 
@@ -34,7 +39,7 @@ public class ChatClientGui implements Observer {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                if(isConnected) {
+                if (isConnected) {
                     chatClient.chatSendingMessage(messageField.getText());
                     messageField.setText("");
                 }
@@ -44,7 +49,7 @@ public class ChatClientGui implements Observer {
         messageField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(isConnected) {
+                if (isConnected) {
                     chatClient.chatSendingMessage(messageField.getText());
                     messageField.setText("");
                 }
@@ -53,12 +58,14 @@ public class ChatClientGui implements Observer {
         DISCONNECTButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if(isConnected) {
+                if (isConnected) {
                     super.mousePressed(e);
                     isConnected = false;
                     chatClient.chatSendingMessage("/disconnect");
                     chatClient.unsubscribe(ChatClientGui.this);
-                    messageRecieved("You have been disconnected from serverAttributeSet!");
+                    JsonObject messageJSON = serverAddonsJson("You have been disconnected from server!");
+                    usersOnlineArea.setText("");
+                    messageRecieved(messageJSON.toString());
                 }
             }
         });
@@ -94,16 +101,25 @@ public class ChatClientGui implements Observer {
         panel1 = new PanelBackground("src/main/resources/background_gray.jpg");
         panel1.setVisible(true);
         messageArea = new TextAreaBackground();
-        messageArea.setEditable(false);
-        messageArea.setBackground(new Color(1, 1, 1, (float) 0.01));
-        scrollPane = new JScrollPane(messageArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        usersOnlineArea = new TextAreaBackground();
+        scrollPane = TextAreaCustomCreation(messageArea);
+        usersPane = TextAreaCustomCreation(usersOnlineArea);
     }
 
     public boolean isPassword() {
         return password;
     }
+
+    public JScrollPane TextAreaCustomCreation(JTextPane area){
+        area.setEditable(false);
+        area.setBackground(new Color(1, 1, 1, (float) 0.01));
+        JScrollPane pane = new JScrollPane(area, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        return pane;
+    }
     @Override
     public void messageRecieved(String message) {
-        writeMessageClient(message, messageArea);
+        if(message.contains("disconnect"))
+            chatClient.chatSendingMessage("/users");
+        writeMessageClient(message, messageArea, usersOnlineArea);
     }
 }

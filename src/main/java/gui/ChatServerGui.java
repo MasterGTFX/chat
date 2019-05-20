@@ -23,6 +23,8 @@ public class ChatServerGui implements Observer {
     private JTextPane logsArea;
     private JScrollPane scrollPane;
     private JTabbedPane tabbedPane1;
+    private JButton BOTButton;
+    private JButton ADDBOTButton;
     private ChatServer chatServer;
     private Boolean isActivated;
     private LogsWriter logsWriter;

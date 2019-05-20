@@ -67,6 +67,7 @@ public class ClientHandler implements Runnable {
         try {
             if(firstConnection) {
                 chatServer.chatEveryone(messageRecieved);
+                chatServer.chatEveryone("/users");
                 while (messageRecieved != null) {
                     messageRecieved = reader.readLine();
                     chatServer.chatEveryone(messageRecieved);

@@ -7,8 +7,7 @@ import javax.json.JsonReader;
 import java.io.StringReader;
 import java.time.LocalDateTime;
 
-import static utilities.MessageJSON.serverAddonsJson;
-import static utilities.MessageJSON.serverLogsJson;
+import static utilities.MessageJSON.*;
 
 public class ChatAddons {
     private LocalDateTime time;
@@ -31,7 +30,7 @@ public class ChatAddons {
             messageJSON = serverAddonsJson((time.getDayOfWeek().name() + ", " + time.getDayOfMonth() + "/" + time.getMonthValue() + "/" + time.getYear()));
         }
         if(message.contains("/users"))
-            messageJSON = serverAddonsJson(chatServer.getUsers().toString());
+            messageJSON = serverUsersJson(chatServer.getUsers().toString());
 
         if(message.contains("/disconnect")){
             JsonReader jsonReader = Json.createReader(new StringReader(message));

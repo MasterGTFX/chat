@@ -10,6 +10,7 @@ import javax.swing.text.BadLocationException;
 
 import java.io.StringReader;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import static gui.TextAttributes.*;
 
@@ -23,7 +24,7 @@ public class GuiDocumentWriter {
             e.printStackTrace();
         }
     }
-    public static void writeMessageClient(String message, JTextPane messageArea){
+    public static void writeMessageClient(String message, JTextPane messageArea, JTextPane usersOnlineArea){
         JsonReader jsonReader = Json.createReader(new StringReader(message));
         messageJson = jsonReader.readObject();
         jsonReader.close();
@@ -39,7 +40,7 @@ public class GuiDocumentWriter {
                 System.out.println(messageJson);
             }
         }
-        if(messageJson.getString("messageType").equals("helloMessage")){
+        else if(messageJson.getString("messageType").equals("helloMessage")){
             try {
                 messageArea.getDocument().insertString(messageArea.getDocument().getLength(), messageJson.getString("username") + " has connected\n", getServerAttributeSet());
             } catch (BadLocationException e) {
@@ -49,9 +50,34 @@ public class GuiDocumentWriter {
                 System.out.println(messageJson);
             }
         }
-        if(messageJson.getString("messageType").equals("serverAddons")){
+        else if(messageJson.getString("messageType").equals("serverAddons")){
             try {
                 messageArea.getDocument().insertString(messageArea.getDocument().getLength(), messageJson.getString("message") + "\n", getServerAddonsAttributeSet());
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }catch (Exception e){
+                e.printStackTrace();
+                System.out.println(messageJson);
+            }
+        }
+        else if(messageJson.getString("messageType").equals("usersOnline")){
+            usersOnlineArea.setText("");
+            try {
+                String[] users = messageJson.getString("message").replaceAll("\\[|\\]|\\s", "").split(",");
+                for(String user:users){
+                    usersOnlineArea.getDocument().insertString(usersOnlineArea.getDocument().getLength(), user + "\n", getLogsAttributeSet());
+                }
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }catch (Exception e){
+
+                e.printStackTrace();
+                System.out.println(messageJson);
+            }
+        }
+        else{
+            try {
+                messageArea.getDocument().insertString(messageArea.getDocument().getLength(), messageJson.getString("message") + "\n", getNormalAttributeSet());
             } catch (BadLocationException e) {
                 e.printStackTrace();
             }catch (Exception e){

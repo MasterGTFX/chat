@@ -27,6 +27,12 @@ public class MessageJSON {
                 .add("message", body).build();
         return message;
     }
+    public static JsonObject serverUsersJson(String body){
+        JsonObject message = builderFactory.createObjectBuilder()
+                .add("messageType", "usersOnline")
+                .add("message", body).build();
+        return message;
+    }
     public static JsonObject serverLogsJson(String body){
         JsonObject message = builderFactory.createObjectBuilder()
                 .add("messageType", "serverLogs")
