@@ -90,7 +90,7 @@ public class ChatClientGui implements Observer {
         frame.pack();
         frame.setSize(500, 600);
         try {
-            frame.setIconImage(new ImageIcon("src/main/resources/slonce.png").getImage());
+            frame.setIconImage(new ImageIcon(ChatClientGui.class.getClassLoader().getResource("slonce.png")).getImage());
         } catch (Exception e) {
             System.out.println("Couldnt load icon file");
         }
@@ -98,7 +98,7 @@ public class ChatClientGui implements Observer {
     }
 
     private void createUIComponents() {
-        panel1 = new PanelBackground("src/main/resources/background_gray.jpg");
+        panel1 = new PanelBackground((getClass().getClassLoader().getResource("background.jpg")));
         panel1.setVisible(true);
         messageArea = new TextAreaBackground();
         usersOnlineArea = new TextAreaBackground();

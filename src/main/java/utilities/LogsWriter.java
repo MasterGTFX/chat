@@ -15,7 +15,7 @@ public class LogsWriter {
         time = LocalDateTime.now();
         String filename = "logs_" + time.getDayOfMonth() + time.getMonthValue() + time.getYear() + "_" + time.getHour() + time.getMinute() + time.getSecond() + ".log";
         try {
-            this.fstream = new FileWriter(new File(".").getAbsolutePath() + "//logs//" +filename, true);
+            this.fstream = new FileWriter(new File(filename), true);
             this.out = new BufferedWriter(fstream);
             System.out.println("logs saved");
             out.write( time.getDayOfMonth()  + "/" + time.getMonthValue()+ "/" + time.getYear() + ", " + time.getHour() + ":" + time.getMinute());

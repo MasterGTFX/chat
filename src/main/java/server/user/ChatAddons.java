@@ -30,7 +30,6 @@ public class ChatAddons {
             messageJSON = serverAddonsJson((time.getDayOfWeek().name() + ", " + time.getDayOfMonth() + "/" + time.getMonthValue() + "/" + time.getYear()));
         }
         if(message.contains("/users")) {
-            chatServer.getUsers().addAll(chatServer.getBots());
             messageJSON = serverUsersJson(chatServer.getUsers().toString());
         }
         if(message.contains("/disconnect")){

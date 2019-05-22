@@ -10,6 +10,7 @@ import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -113,13 +114,12 @@ public class ChatServerGui implements Observer {
                     int result = JOptionPane.showConfirmDialog(panel1, myPanel,
                             "Please Enter Bot Name and Port", JOptionPane.YES_NO_OPTION);
                     if (result == JOptionPane.OK_OPTION) {
-                        if(!botNameField.getText().isEmpty() || !botPortField.getText().isEmpty()) {
+                        if (!botNameField.getText().isEmpty() || !botPortField.getText().isEmpty()) {
                             chatBotServer.add(new ChatBotServer(botNameField.getText(), Integer.parseInt(botPortField.getText()), chatServer));
                             Thread serverStart = new Thread(chatBotServer.get(chatBotServer.size() - 1));
                             serverStart.start();
                             (chatBotServer.get(chatBotServer.size() - 1)).subscribe(observer);
-                        }
-                        else{
+                        } else {
                             new DialogWindows("Bad input", "Either bot name or port number is empty!", 1);
                         }
                     }
@@ -129,6 +129,7 @@ public class ChatServerGui implements Observer {
             }
         });
     }
+
 
 
     public static void main(String[] args) {
@@ -147,7 +148,7 @@ public class ChatServerGui implements Observer {
         frame.pack();
         frame.setSize(600, 600);
         try {
-            frame.setIconImage(new ImageIcon("src/main/resources/slonce.png").getImage());
+            frame.setIconImage(new ImageIcon(ChatServerGui.class.getClassLoader().getResource("slonce.png")).getImage());
         } catch (Exception e) {
             System.out.println("Couldnt load icon file");
         }
@@ -155,7 +156,8 @@ public class ChatServerGui implements Observer {
     }
 
     private void createUIComponents() {
-        panel1 = new PanelBackground("src/gui/resources/background_gray.jpg");
+        panel1 = new PanelBackground(getClass().getClassLoader().getResource("background.jpg"));
+        //panel1 = new PanelBackground("src/gui/resources/background_gray.jpg");
         logsArea = new TextAreaBackground();
         logsArea.setBackground(new Color(1, 1, 1, (float) 0.01));
         logsArea.setEditable(false);
