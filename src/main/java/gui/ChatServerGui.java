@@ -1,6 +1,7 @@
 package gui;
 
-import server.ChatServer;
+import server.bot.ChatBotServer;
+import server.user.ChatServer;
 import model.Observer;
 import utilities.LogsWriter;
 
@@ -10,6 +11,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import static gui.GuiDocumentWriter.writeMessageServer;
 import static gui.TextAttributes.getLogsAttributeSet;
@@ -26,23 +28,26 @@ public class ChatServerGui implements Observer {
     private JButton BOTButton;
     private JButton ADDBOTButton;
     private ChatServer chatServer;
+    private ArrayList<ChatBotServer> chatBotServer = new ArrayList<>();
     private Boolean isActivated;
     private LogsWriter logsWriter;
     private LocalDateTime time;
+    private Observer observer;
 
     public ChatServerGui(String[] data) {
         time = LocalDateTime.now();
         this.logsWriter = new LogsWriter();
         isActivated = false;
-       // $$$setupUI$$$();
+        // $$$setupUI$$$();
         chatServer = new ChatServer(data);
         chatServer.subscribe(this);
+        observer = this;
         Thread serverStart = new Thread(chatServer);
         STARTButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                if(!isActivated) {
+                if (!isActivated) {
                     isActivated = true;
                     serverStart.start();
                     try {
@@ -57,7 +62,7 @@ public class ChatServerGui implements Observer {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                if(isActivated){
+                if (isActivated) {
                     isActivated = false;
                     try {
                         logsArea.getDocument().insertString(logsArea.getDocument().getLength(), "Server stopped working..\n", getLogsAttributeSet());
@@ -88,7 +93,43 @@ public class ChatServerGui implements Observer {
                 logsArea.setText("");
             }
         });
+        ADDBOTButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                if (isActivated) {
+                    JTextField botNameField = new JTextField(5);
+                    botNameField.setText("Greg");
+                    JTextField botPortField = new JTextField(5);
+                    botPortField.setText("12121");
+
+                    JPanel myPanel = new JPanel();
+                    myPanel.add(new JLabel("Bot Name:"));
+                    myPanel.add(botNameField);
+                    myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+                    myPanel.add(new JLabel("Port:"));
+                    myPanel.add(botPortField);
+
+                    int result = JOptionPane.showConfirmDialog(panel1, myPanel,
+                            "Please Enter Bot Name and Port", JOptionPane.YES_NO_OPTION);
+                    if (result == JOptionPane.OK_OPTION) {
+                        if(!botNameField.getText().isEmpty() || !botPortField.getText().isEmpty()) {
+                            chatBotServer.add(new ChatBotServer(botNameField.getText(), Integer.parseInt(botPortField.getText()), chatServer));
+                            Thread serverStart = new Thread(chatBotServer.get(chatBotServer.size() - 1));
+                            serverStart.start();
+                            (chatBotServer.get(chatBotServer.size() - 1)).subscribe(observer);
+                        }
+                        else{
+                            new DialogWindows("Bad input", "Either bot name or port number is empty!", 1);
+                        }
+                    }
+                } else {
+                    new DialogWindows("Server offline", "You must start server first!", 1);
+                }
+            }
+        });
     }
+
 
     public static void main(String[] args) {
       /*  if (!(args.length > 0)) {
@@ -120,8 +161,9 @@ public class ChatServerGui implements Observer {
         logsArea.setEditable(false);
         scrollPane = new JScrollPane(logsArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     }
+
     @Override
     public void messageRecieved(String message) {
-        writeMessageServer(message,logsArea,logsWriter);
+        writeMessageServer(message, logsArea, logsWriter);
     }
 }

@@ -1,4 +1,4 @@
-package server;
+package server.user;
 
 import javax.json.Json;
 import javax.json.JsonObject;

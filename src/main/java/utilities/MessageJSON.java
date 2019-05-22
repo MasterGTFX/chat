@@ -13,6 +13,42 @@ public class MessageJSON {
                 .add("password", password).build();
         return message;
     }
+    public static JsonObject helloMessageBotJson(String botName){
+        JsonObject message = builderFactory.createObjectBuilder()
+                .add("messageType", "botHelloMessage")
+                .add("botName", botName).build();
+        return message;
+    }
+    public static JsonObject botMessageJson(String botName, String body){
+        JsonObject message = builderFactory.createObjectBuilder()
+                .add("messageType", "botMessage")
+                .add("message", body)
+                .add("botName", botName).build();
+        return message;
+    }
+    public static JsonObject toBotMessageJson(String username, String ipaddress, String botName, String body){
+        JsonObject message = builderFactory.createObjectBuilder()
+                .add("messageType", "toBotMessage")
+                .add("message", body)
+                .add("username", username)
+                .add("ipaddress", ipaddress)
+                .add("botName", botName).build();
+        return message;
+    }
+    public static JsonObject botNotFound(String botName, String username){
+        JsonObject message = builderFactory.createObjectBuilder()
+                .add("messageType", "botNotFound")
+                .add("username", username)
+                .add("message", "there is no bot named " + botName).build();
+        return message;
+    }
+    public static JsonObject botLogs(String botName, String body){
+        JsonObject message = builderFactory.createObjectBuilder()
+                .add("messageType", "botLogs")
+                .add("botName", botName)
+                .add("message", body).build();
+        return message;
+    }
     public static JsonObject messageJson(){
         JsonObject message = builderFactory.createObjectBuilder()
                 .add("messageType", "")

@@ -59,6 +59,9 @@ public class WindowHandler {
             case "server":
                 ChatServerGui.main(args);
                 break;
+            case "bot":
+
+                break;
             default:
                 ChatGUI.main(null);
                 break;

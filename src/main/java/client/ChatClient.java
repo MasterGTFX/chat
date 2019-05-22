@@ -9,8 +9,7 @@ import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 
 import static java.lang.Thread.sleep;
-import static utilities.MessageJSON.helloMessageJson;
-import static utilities.MessageJSON.messageJson;
+import static utilities.MessageJSON.*;
 
 public class ChatClient extends Chat implements Runnable  {
     private String incomingMessages;
@@ -54,6 +53,10 @@ public class ChatClient extends Chat implements Runnable  {
    @Override
    public void chatSendingMessage(String body) {
         JsonObject message = messageJson(getUsername(),getMyIpAddress(),body);
+       if(body.contains("$")){
+           String[] bodyParts = body.split("\\$");
+           message = toBotMessageJson(getUsername(),getMyIpAddress(), bodyParts[0], bodyParts[1]);
+       }
         try{
             getOut().write(message.toString() + System.lineSeparator());
             getOut().flush();

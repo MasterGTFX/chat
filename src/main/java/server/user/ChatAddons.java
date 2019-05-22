@@ -1,5 +1,5 @@
 //log messages, commands, disconnect etc.
-package server;
+package server.user;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -29,9 +29,10 @@ public class ChatAddons {
             time = LocalDateTime.now();
             messageJSON = serverAddonsJson((time.getDayOfWeek().name() + ", " + time.getDayOfMonth() + "/" + time.getMonthValue() + "/" + time.getYear()));
         }
-        if(message.contains("/users"))
+        if(message.contains("/users")) {
+            chatServer.getUsers().addAll(chatServer.getBots());
             messageJSON = serverUsersJson(chatServer.getUsers().toString());
-
+        }
         if(message.contains("/disconnect")){
             JsonReader jsonReader = Json.createReader(new StringReader(message));
             JsonObject messageJSO2 = jsonReader.readObject();

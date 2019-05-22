@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.OutputStreamWriter;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public abstract class Chat implements Observable {
     private Socket socket;
@@ -22,10 +23,12 @@ public abstract class Chat implements Observable {
     private BufferedReader in;
     private OutputStreamWriter out;
     private ArrayList<String> users;
+    private ArrayList<String> bots;
     private Observer observer;
 
     public Chat() {
-        users = new ArrayList<String>();
+        users = new ArrayList<>();
+        bots = new ArrayList<>();
         portNumber = defaultPort;
         myIpAddress = defaultIP;
         username = defaultUsername;
@@ -38,7 +41,8 @@ public abstract class Chat implements Observable {
         }
     }
     public Chat(String[] data){
-        users = new ArrayList<String>();
+        users = new ArrayList<>();
+        bots = new ArrayList<>();
         this.username = data[1];
         this.portNumber = Integer.parseInt(data[3]);
         this.password = data[4];
@@ -131,5 +135,9 @@ public abstract class Chat implements Observable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public ArrayList<String> getBots() {
+        return bots;
     }
 }
