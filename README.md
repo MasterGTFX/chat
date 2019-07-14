@@ -21,7 +21,7 @@ Clone the project and run ChatGui, which is main class. You can host a server or
 * [ChatterBot](https://github.com/gunthercox/ChatterBot) - Used to make AI bots
 
 ## Author
-* **Dominik Baran** - *Initial work* - [MasterGTFX](https://github.com/MasterGTFX)
+* **Dominik Baran** - [MasterGTFX](https://github.com/MasterGTFX)
 
 ## License
 This project is free to use or modify.
